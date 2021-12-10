@@ -34,6 +34,8 @@ type Context struct {
 
 }
 
+
+
 func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	return &Context{
 		request:        nil,
@@ -170,4 +172,20 @@ func (c *Context) BindJson(obj interface{}) error {
 	}
 	return nil
 }
+
+func (c *Context) Json(code int, obj interface{}) error {
+	if c.HasTimeout() {
+		return nil
+	}
+	c.responseWriter.Header().Set("Content-type","application/json")
+	c.responseWriter.WriteHeader(code)
+	byt, err := json.Marshal(obj)
+	if err != nil {
+		c.responseWriter.WriteHeader(500)
+		return err
+	}
+	c.responseWriter.Write(byt)
+	return nil
+}
+
 

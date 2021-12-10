@@ -1,14 +1,17 @@
 package main
 
 import (
-	"demo/framework"
+	"github.com/zoulingbin/easy-frame/framework"
 	"net/http"
+	_ "net/http/pprof"
 )
 
 func main() {
+	core := framework.NewCore()
+	RegisterRoute(core)
 	server := http.Server{
-		Handler: framework.NewCore(),
-		Addr: ":8080",
+		Handler: core,
+		Addr:    ":8888",
 	}
 	server.ListenAndServe()
 }
